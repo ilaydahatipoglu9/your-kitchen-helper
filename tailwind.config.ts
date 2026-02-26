@@ -13,6 +13,13 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+      },
+      maxWidth: {
+        'content': '1440px',
+        'reading': '1200px',
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -57,6 +64,15 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        maritime: {
+          navy: "hsl(var(--maritime-navy))",
+          teal: "hsl(var(--maritime-teal))",
+          seafoam: "hsl(var(--maritime-seafoam))",
+          cream: "hsl(var(--maritime-cream))",
+          live: "hsl(var(--maritime-live))",
+          success: "hsl(var(--maritime-success))",
+          warning: "hsl(var(--maritime-warning))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -80,12 +96,22 @@ export default {
             height: "0",
           },
         },
+        "fade-in": {
+          from: { opacity: "0" },
+          to: { opacity: "1" },
+        },
+        "slide-up": {
+          from: { transform: "translateY(10px)", opacity: "0" },
+          to: { transform: "translateY(0)", opacity: "1" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "fade-in": "fade-in 0.3s ease-out",
+        "slide-up": "slide-up 0.3s ease-out",
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
 } satisfies Config;
