@@ -1,7 +1,11 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 
-const app = new Hono();
+interface Env {
+	ASSETS: Fetcher;
+}
+
+const app = new Hono<{ Bindings: Env }>();
 
 app.use('/api/*', cors({ origin: '*', allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], allowHeaders: ['Content-Type', 'Authorization'] }));
 
@@ -16,4 +20,4 @@ export default {
 	async fetch(request: any, env: any, ctx: any) {
 		return app.fetch(request, env, ctx);
 	},
-}
+} satisfies ExportedHandler<Env>;
