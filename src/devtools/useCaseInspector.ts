@@ -1,5 +1,7 @@
+const params = new URLSearchParams(window.location.search);
+const ENABLE_INSPECTOR = import.meta.env.DEV || params.has("inspect");
 
-if (import.meta.env.DEV) {
+if (ENABLE_INSPECTOR) {
     let overlay: HTMLDivElement | null = null;
 
     const showOverlay = (target: HTMLElement, useCases: string) => {
