@@ -2,95 +2,147 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+/* Maritime Serenity Design System - AI Chat Assistant
 All colors MUST be HSL.
 */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Maritime Serenity - Light Theme */
+    /* Deep ocean blues with crisp whites for a calming, professional feel */
+    --background: 210 40% 98%;
+    --foreground: 210 50% 10%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 210 50% 10%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 210 50% 10%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Primary - Deep Ocean Blue */
+    --primary: 210 80% 45%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Secondary - Soft Sky Blue */
+    --secondary: 210 40% 94%;
+    --secondary-foreground: 210 50% 20%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Muted - Gentle Gray Blue */
+    --muted: 210 30% 95%;
+    --muted-foreground: 210 20% 50%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Accent - Teal Wave */
+    --accent: 185 60% 45%;
+    --accent-foreground: 0 0% 100%;
 
+    /* Destructive - Coral Warning */
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    /* Success - Sea Green */
+    --success: 160 60% 45%;
+    --success-foreground: 0 0% 100%;
 
-    --radius: 0.5rem;
+    /* Warning - Sunset Orange */
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
 
-    --sidebar-background: 0 0% 98%;
+    --border: 210 30% 88%;
+    --input: 210 30% 88%;
+    --ring: 210 80% 45%;
 
-    --sidebar-foreground: 240 5.3% 26.1%;
+    --radius: 0.75rem;
 
-    --sidebar-primary: 240 5.9% 10%;
+    /* Sidebar - Deeper Ocean */
+    --sidebar-background: 210 45% 96%;
+    --sidebar-foreground: 210 40% 25%;
+    --sidebar-primary: 210 80% 45%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 40% 92%;
+    --sidebar-accent-foreground: 210 50% 15%;
+    --sidebar-border: 210 30% 88%;
+    --sidebar-ring: 210 80% 45%;
 
-    --sidebar-primary-foreground: 0 0% 98%;
+    /* Chat specific colors */
+    --chat-user-bg: 210 80% 45%;
+    --chat-user-fg: 0 0% 100%;
+    --chat-ai-bg: 210 30% 95%;
+    --chat-ai-fg: 210 50% 15%;
+    --chat-system-bg: 185 40% 95%;
+    --chat-system-fg: 185 50% 25%;
 
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Tool invocation */
+    --tool-bg: 38 80% 95%;
+    --tool-border: 38 70% 70%;
+    --tool-fg: 38 60% 25%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    /* Maritime Serenity - Dark Theme */
+    /* Deep ocean depths with luminous accents */
+    --background: 210 50% 8%;
+    --foreground: 210 30% 95%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 210 45% 12%;
+    --card-foreground: 210 30% 95%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 210 45% 12%;
+    --popover-foreground: 210 30% 95%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    /* Primary - Bright Ocean Blue */
+    --primary: 210 80% 55%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    /* Secondary - Deep Blue Gray */
+    --secondary: 210 40% 18%;
+    --secondary-foreground: 210 30% 90%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    /* Muted - Ocean Depth */
+    --muted: 210 35% 15%;
+    --muted-foreground: 210 20% 60%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    /* Accent - Luminous Teal */
+    --accent: 185 60% 50%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    /* Destructive */
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
+    /* Success */
+    --success: 160 60% 50%;
+    --success-foreground: 0 0% 100%;
+
+    /* Warning */
+    --warning: 38 85% 55%;
+    --warning-foreground: 0 0% 100%;
+
+    --border: 210 35% 20%;
+    --input: 210 35% 20%;
+    --ring: 210 80% 55%;
+
+    /* Sidebar - Deep Ocean */
+    --sidebar-background: 210 50% 10%;
+    --sidebar-foreground: 210 30% 90%;
+    --sidebar-primary: 210 80% 55%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-accent: 210 40% 15%;
+    --sidebar-accent-foreground: 210 30% 95%;
+    --sidebar-border: 210 35% 18%;
+    --sidebar-ring: 210 80% 55%;
+
+    /* Chat specific colors - Dark */
+    --chat-user-bg: 210 80% 50%;
+    --chat-user-fg: 0 0% 100%;
+    --chat-ai-bg: 210 40% 15%;
+    --chat-ai-fg: 210 30% 90%;
+    --chat-system-bg: 185 40% 15%;
+    --chat-system-fg: 185 40% 80%;
+
+    /* Tool invocation - Dark */
+    --tool-bg: 38 50% 15%;
+    --tool-border: 38 60% 40%;
+    --tool-fg: 38 50% 80%;
   }
 }
 
@@ -102,4 +154,63 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Custom animations for chat interface */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes typing-dot {
+  0%, 60%, 100% {
+    opacity: 0.3;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.3s ease-out;
+}
+
+.animate-typing-dot {
+  animation: typing-dot 1.4s infinite ease-in-out;
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s infinite ease-in-out;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.3s ease-out;
 }
