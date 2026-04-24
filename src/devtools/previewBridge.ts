@@ -185,8 +185,15 @@ const disableRequirementsMode = () => {
     hideOverlay();
 };
 
+const navigateToPath = (path: string) => {
+    const current = window.location.pathname + window.location.search + window.location.hash;
+    if (current === path) return;
+    history.pushState({}, '', path);
+};
+
 (window as any).enableRequirementsMode = enableRequirementsMode;
 (window as any).disableRequirementsMode = disableRequirementsMode;
+(window as any).navigateToPath = navigateToPath;
 
 // route change emitter 
 const emitRouteChange = (path: string) => {
@@ -237,4 +244,27 @@ const observeRouteChanges = () => {
     emitRouteChange(window.location.pathname);
 };
 
+const emitBridgeReady = () => {
+    const message = JSON.stringify({
+        source: 'PREVIEW_FRAME',
+        type: 'CODE_PREVIEW:BRIDGE_READY',
+        payload: {},
+        timestamp: Date.now()
+    });
+
+    if ((window as any).parentChannel) {
+        (window as any).parentChannel.postMessage(message);
+    }
+
+    document.dispatchEvent(
+        new CustomEvent("bridgeready", {
+            detail: {},
+            bubbles: true,
+        })
+    );
+};
+
 observeRouteChanges();
+
+(window as any).isPreviewBridgeReady = true;
+emitBridgeReady();
