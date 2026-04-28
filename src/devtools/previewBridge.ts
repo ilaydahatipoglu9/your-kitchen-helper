@@ -189,6 +189,7 @@ const navigateToPath = (path: string) => {
     const current = window.location.pathname + window.location.search + window.location.hash;
     if (current === path) return;
     history.pushState({}, '', path);
+    window.dispatchEvent(new PopStateEvent('popstate'));
 };
 
 (window as any).enableRequirementsMode = enableRequirementsMode;
