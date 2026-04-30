@@ -1,3 +1,5 @@
+import appRoutes from "./routes.generated.json";
+
 let overlay: HTMLDivElement | null = null;
 let currentTarget: HTMLElement | null = null;
 let isOverTooltip = false;
@@ -244,6 +246,28 @@ const observeRouteChanges = () => {
 
     emitRouteChange(window.location.pathname);
 };
+
+const emitRoutesExtracted = () => {
+    const message = JSON.stringify({
+        source: 'PREVIEW_FRAME',
+        type: 'CODE_PREVIEW:ROUTES_EXTRACTED',
+        payload: { routes: appRoutes },
+        timestamp: Date.now()
+    });
+
+    if ((window as any).parentChannel) {
+        (window as any).parentChannel.postMessage(message);
+    }
+
+    document.dispatchEvent(
+        new CustomEvent("routesextracted", {
+            detail: { routes: appRoutes },
+            bubbles: true,
+        })
+    );
+};
+
+emitRoutesExtracted();
 
 const emitBridgeReady = () => {
     const message = JSON.stringify({
