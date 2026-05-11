@@ -1,6 +1,7 @@
+import appRoutes from "./routes.generated.json";
+
 let overlay: HTMLDivElement | null = null;
 let currentTarget: HTMLElement | null = null;
-let isOverTooltip = false;
 let hideTimer: ReturnType<typeof setTimeout> | null = null;
 
 const HIDE_DELAY = 400;
@@ -8,13 +9,14 @@ const HIDE_DELAY = 400;
 const buildTooltipLink = (useCaseIds: string[]): string => {
     const count = useCaseIds.length;
     return count === 1
-        ? "View use case and requirement for this element"
-        : `View ${count} use cases and requirements for this element`;
+        ? "View use case and the requirements for this component"
+        : `View ${count} use cases and the requirements for this component`;
 };
 
 const scheduleHide = () => {
+    cancelHide();
     hideTimer = setTimeout(() => {
-        if (!isOverTooltip) hideOverlay();
+        hideOverlay();
     }, HIDE_DELAY);
 };
 
@@ -33,27 +35,17 @@ const getOrCreateOverlay = (): HTMLDivElement => {
     overlay.style.position = "fixed";
     overlay.style.zIndex = "99999";
     overlay.style.pointerEvents = "auto";
-    overlay.style.whiteSpace = "nowrap";
-    overlay.style.width = "auto";
-    overlay.style.height = "auto"
-    overlay.style.display = "flex";
-    overlay.style.alignItems = "center";
-    overlay.style.padding = "8px 12px";
+    overlay.style.maxWidth = "240px";
     overlay.style.boxSizing = "border-box";
+    overlay.style.padding = "8px 12px";
     overlay.style.borderRadius = "12px";
     overlay.style.background = "rgba(254, 254, 254, 1)";
     overlay.style.color = "rgba(65, 73, 75, 1)";
     overlay.style.border = "1.5px solid rgba(65, 73, 75, 1)";
     overlay.style.boxShadow = "0 13px 27px -5px rgba(18, 27, 30, 0.2)";
 
-    overlay.addEventListener("mouseenter", () => {
-        isOverTooltip = true;
-        cancelHide();
-    });
-    overlay.addEventListener("mouseleave", () => {
-        isOverTooltip = false;
-        scheduleHide();
-    });
+    overlay.addEventListener("mouseenter", cancelHide);
+    overlay.addEventListener("mouseleave", scheduleHide);
 
     document.body.appendChild(overlay);
     return overlay;
@@ -82,7 +74,6 @@ const showOverlay = (target: HTMLElement, useCaseIds: string[]) => {
     link.style.textDecoration = "underline";
     link.style.textDecorationStyle = "solid";
     link.style.textDecorationSkipInk = "auto";
-    link.style.whiteSpace = "nowrap";
     link.style.color = "inherit";
     link.style.cursor = "pointer";
 
@@ -130,18 +121,15 @@ const emitUseCaseSelected = (useCaseIds: string[]) => {
 const onMouseOver = (event: MouseEvent) => {
     const targetEl = event.target as HTMLElement;
 
-    // If interacting with tooltip, ignore everything
-    if (isOverTooltip) return;
-
-    // If tooltip is active, do not switch targets
-    if (currentTarget) return;
-
-    if (overlay && overlay.contains(targetEl)) return;
+    if (overlay && overlay.contains(targetEl)) {
+        cancelHide();
+        return;
+    }
 
     const target = targetEl.closest("[data-usecases]") as HTMLElement | null;
 
     if (!target) {
-        if (!isOverTooltip) scheduleHide();
+        if (currentTarget) scheduleHide();
         return;
     }
 
@@ -164,8 +152,11 @@ const onMouseOver = (event: MouseEvent) => {
     showOverlay(target, useCaseIds);
 };
 
-const onMouseOut = () => {
-    if (!isOverTooltip) scheduleHide();
+const onMouseOut = (event: MouseEvent) => {
+    const related = event.relatedTarget as Node | null;
+    if (related && overlay && overlay.contains(related)) return;
+    if (related && currentTarget && currentTarget.contains(related)) return;
+    if (currentTarget) scheduleHide();
 };
 
 let requirementsModeActive = false;
@@ -245,6 +236,26 @@ const observeRouteChanges = () => {
     emitRouteChange(window.location.pathname);
 };
 
+const emitRoutesExtracted = () => {
+    const message = JSON.stringify({
+        source: 'PREVIEW_FRAME',
+        type: 'CODE_PREVIEW:ROUTES_EXTRACTED',
+        payload: { routes: appRoutes },
+        timestamp: Date.now()
+    });
+
+    if ((window as any).parentChannel) {
+        (window as any).parentChannel.postMessage(message);
+    }
+
+    document.dispatchEvent(
+        new CustomEvent("routesextracted", {
+            detail: { routes: appRoutes },
+            bubbles: true,
+        })
+    );
+};
+
 const emitBridgeReady = () => {
     const message = JSON.stringify({
         source: 'PREVIEW_FRAME',
@@ -264,6 +275,8 @@ const emitBridgeReady = () => {
         })
     );
 };
+
+emitRoutesExtracted();
 
 observeRouteChanges();
 
