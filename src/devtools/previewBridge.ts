@@ -1,3 +1,4 @@
+// @ts-ignore - routes.generated.json is created at build time
 import appRoutes from "./routes.generated.json";
 
 let overlay: HTMLDivElement | null = null;
@@ -47,6 +48,11 @@ const getOrCreateOverlay = (): HTMLDivElement => {
     overlay.addEventListener("mouseenter", cancelHide);
     overlay.addEventListener("mouseleave", scheduleHide);
 
+    const stopProp = (e: Event) => e.stopPropagation();
+    overlay.addEventListener("pointerdown", stopProp);
+    overlay.addEventListener("mousedown", stopProp);
+    overlay.addEventListener("click", stopProp);
+
     document.body.appendChild(overlay);
     return overlay;
 };
@@ -56,10 +62,35 @@ const hideOverlay = () => {
     currentTarget = null;
 };
 
+const computeTooltipPosition = (
+    target: HTMLElement,
+    tipWidth: number,
+    tipHeight: number,
+): { top: number; left: number } => {
+    const margin = 8;
+    const rect = target.getBoundingClientRect();
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+
+    let top = rect.top - tipHeight - margin;
+    if (top < margin) {
+        const below = rect.bottom + margin;
+        top = below + tipHeight + margin <= viewportHeight
+            ? below
+            : Math.max(margin, viewportHeight - tipHeight - margin);
+    }
+
+    let left = rect.left;
+    if (left + tipWidth > viewportWidth - margin) {
+        left = viewportWidth - tipWidth - margin;
+    }
+    if (left < margin) left = margin;
+
+    return { top, left };
+};
+
 const showOverlay = (target: HTMLElement, useCaseIds: string[]) => {
     const tip = getOrCreateOverlay();
-
-    const rect = target.getBoundingClientRect();
 
     tip.innerHTML = "";
     const link = document.createElement("a");
@@ -82,14 +113,22 @@ const showOverlay = (target: HTMLElement, useCaseIds: string[]) => {
     link.addEventListener("click", (e) => {
         e.preventDefault();
         emitUseCaseSelected(useCaseIds);
+        hideOverlay();
     });
 
     tip.appendChild(link);
 
-    tip.style.top = `${rect.top - 8}px`;
-    tip.style.left = `${rect.left}px`;
-    tip.style.transform = "translateY(-100%)";
+    tip.style.transform = "none";
+    tip.style.visibility = "hidden";
+    tip.style.top = "0px";
+    tip.style.left = "0px";
     tip.style.display = "block";
+
+    const { top, left } = computeTooltipPosition(target, tip.offsetWidth, tip.offsetHeight);
+
+    tip.style.top = `${top}px`;
+    tip.style.left = `${left}px`;
+    tip.style.visibility = "visible";
 };
 
 
