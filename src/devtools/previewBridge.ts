@@ -7,8 +7,8 @@ let hideTimer: ReturnType<typeof setTimeout> | null = null;
 
 const HIDE_DELAY = 400;
 
-const buildTooltipLink = (useCaseIds: string[]): string => {
-    const count = useCaseIds.length;
+const buildTooltipLink = (useCaseSlugs: string[]): string => {
+    const count = useCaseSlugs.length;
     return count === 1
         ? "View use case and the requirements for this component"
         : `View ${count} use cases and the requirements for this component`;
@@ -89,7 +89,7 @@ const computeTooltipPosition = (
     return { top, left };
 };
 
-const showOverlay = (target: HTMLElement, useCaseIds: string[]) => {
+const showOverlay = (target: HTMLElement, useCaseSlugs: string[]) => {
     const tip = getOrCreateOverlay();
 
     tip.innerHTML = "";
@@ -108,11 +108,11 @@ const showOverlay = (target: HTMLElement, useCaseIds: string[]) => {
     link.style.color = "inherit";
     link.style.cursor = "pointer";
 
-    link.textContent = buildTooltipLink(useCaseIds);
+    link.textContent = buildTooltipLink(useCaseSlugs);
 
     link.addEventListener("click", (e) => {
         e.preventDefault();
-        emitUseCaseSelected(useCaseIds);
+        emitUseCaseSelected(useCaseSlugs);
         hideOverlay();
     });
 
@@ -132,14 +132,14 @@ const showOverlay = (target: HTMLElement, useCaseIds: string[]) => {
 };
 
 
-const emitUseCaseSelected = (useCaseIds: string[]) => {
+const emitUseCaseSelected = (useCaseSlugs: string[]) => {
     const message = JSON.stringify({
         source: 'PREVIEW_FRAME',
         type: 'CODE_PREVIEW:USECASES_SELECTED',
         payload: {
-            selectedIds: useCaseIds,
+            selectedSlugs: useCaseSlugs,
             metadata: {
-                totalSelected: useCaseIds.length
+                totalSelected: useCaseSlugs.length
             }
         },
         timestamp: Date.now()
@@ -151,7 +151,7 @@ const emitUseCaseSelected = (useCaseIds: string[]) => {
 
     document.dispatchEvent(
         new CustomEvent("usecaseselected", {
-            detail: { useCaseIds },
+            detail: { useCaseSlugs },
             bubbles: true,
         })
     );
@@ -177,18 +177,18 @@ const onMouseOver = (event: MouseEvent) => {
     if (target === currentTarget) return;
 
     const raw = target.dataset.usecases ?? "";
-    const useCaseIds = raw
+    const useCaseSlugs = raw
         .split(",")
         .map((s) => s.trim())
         .filter(Boolean);
 
-    if (!useCaseIds.length) {
+    if (!useCaseSlugs.length) {
         scheduleHide();
         return;
     }
 
     currentTarget = target;
-    showOverlay(target, useCaseIds);
+    showOverlay(target, useCaseSlugs);
 };
 
 const onMouseOut = (event: MouseEvent) => {
